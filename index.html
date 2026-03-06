@@ -17,15 +17,6 @@
 <meta name="twitter:description" content="A flowchart quiz that matches you to your DSA caucus or tendency. Find your political home within the Democratic Socialists of America.">
 <meta name="twitter:site" content="@socfemme">
 <title>RoseSorter — DSA Caucus Sorter</title>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "RoseSorter",
-  "alternateName": "DSA Caucus Sorter",
-  "url": "https://rosesorter.github.io/CaucusSorter/"
-}
-</script>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   body{background:#0d0d0d;color:#fff;font-family:'Georgia',serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:48px 20px}
@@ -35,7 +26,8 @@
   .card-corner{position:absolute;top:0;left:0;width:40px;height:40px;background:#e63946;clip-path:polygon(0 0,100% 0,0 100%)}
   .progress-bar-wrap{width:100%;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin-bottom:32px}
   .progress-bar-fill{height:100%;background:#e63946;border-radius:2px;transition:width 0.4s ease}
-  .question{font-size:clamp(16px,3vw,22px);line-height:1.5;font-weight:600;margin-bottom:32px;color:#fff;padding-left:4px}
+  .question{font-size:clamp(16px,3vw,22px);line-height:1.5;font-weight:600;margin-bottom:12px;color:#fff;padding-left:4px}
+  .question-subtext{font-size:11px;line-height:1.6;color:rgba(255,255,255,0.35);padding-left:4px;margin-bottom:24px;font-family:sans-serif;font-weight:400}
   .answers{display:flex;flex-direction:column;gap:12px}
   .answer-btn{background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.82);padding:16px 20px;text-align:left;cursor:pointer;font-family:Georgia,serif;font-size:15px;line-height:1.5;transition:all 0.15s ease}
   .answer-btn:hover{border-color:rgba(255,255,255,0.4);color:#fff;background:rgba(255,255,255,0.04)}
@@ -271,6 +263,7 @@ const TREE = {
       next: {
         id: "q_third_camp",
         question: "I am a third campist.",
+        subtext: "The third camp is the belief, often associated with Trotskyism, that in geopolitical disputes we should support the \"third camp\" of the organized working class rather than either of the two camps of warring imperialist powers.",
         answers: [
           {
             text: "Yes.",
@@ -305,55 +298,16 @@ const TREE = {
           {
             text: "Not really.",
             next: {
-              id: "q_revgoal",
-              question: "What should the primary goal of revolutionaries organizing in the United States be?",
+              id: "q_demcent",
+              question: "Should DSA be democratic centralist?",
               answers: [
                 {
-                  text: "Organizing a revolutionary proletarian base within the U.S.",
-                  next: {
-                    id: "q_demcent",
-                    question: "Should DSA be democratic centralist?",
-                    answers: [
-                      {
-                        text: "Yes.",
-                        next: { id: "red_star", result: "Red Star" }
-                      },
-                      {
-                        text: "Probably not.",
-                        next: {
-                          id: "q_electoral_vehicle",
-                          question: "Should DSA consider electoral work as its primary vehicle for change?",
-                          answers: [
-                            {
-                              text: "Yes.",
-                              next: { id: "red_line", result: "Red Line" }
-                            },
-                            {
-                              text: "No.",
-                              next: { id: "emerge", result: "Emerge" }
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
+                  text: "Yes.",
+                  next: { id: "red_star", result: "Red Star" }
                 },
                 {
-                  text: "Organizing against U.S. imperialism abroad.",
-                  next: {
-                    id: "q_inspires",
-                    question: "What inspires you more?",
-                    answers: [
-                      {
-                        text: "Palestinian resistance.",
-                        next: { id: "springs", result: "Springs of Revolution" }
-                      },
-                      {
-                        text: "Actually existing socialism.",
-                        next: { id: "c21", result: "21st Century Socialism" }
-                      }
-                    ]
-                  }
+                  text: "Probably not.",
+                  next: { id: "red_line", result: "Red Line" }
                 }
               ]
             }
@@ -373,7 +327,37 @@ const TREE = {
           },
           {
             text: "Broadly communist.",
-            next: { id: "communist_caucus", result: "Communist Caucus" }
+            next: {
+              id: "q_communist_terrain",
+              question: "What is the primary terrain of your organizing?",
+              answers: [
+                {
+                  text: "Building autonomous working-class institutions like militant labor and tenant unions.",
+                  next: { id: "communist_caucus", result: "Communist Caucus" }
+                },
+                {
+                  text: "Anti-imperialist, abolitionist, and immigrant justice movements as the terrains of day-to-day struggle against international racial capitalism.",
+                  next: {
+                    id: "q_org_form",
+                    question: "How would you rather organize for your vision of DSA?",
+                    answers: [
+                      {
+                        text: "Within a formal caucus with firm expectations for members.",
+                        next: { id: "emerge", result: "Emerge" }
+                      },
+                      {
+                        text: "Within a cross-caucus network of organizers united around a similar vision of DSA.",
+                        next: { id: "springs", result: "Springs of Revolution" }
+                      }
+                    ]
+                  }
+                },
+                {
+                  text: "Learning from socialist projects in China, Cuba, Vietnam, and Venezuela, in solidarity with the Global South.",
+                  next: { id: "c21", result: "21st Century Socialism" }
+                }
+              ]
+            }
           },
           {
             text: "Maoist.",
@@ -383,7 +367,7 @@ const TREE = {
       }
     },
     {
-      text: "We should immediately form a socialist third party and expel all electeds.",
+      text: "We should immediately form a socialist third party.",
       next: { id: "just_break", result: "Just Break Already" }
     }
   ]
@@ -490,7 +474,8 @@ function render() {
   const app = document.getElementById('app');
   if (!current.result) {
     const pct = Math.min((history.length / 6) * 100, 95);
-    app.innerHTML = `<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div><p class="question">${current.question}</p><div class="answers" id="answers"></div>${history.length > 0 ? '<button class="back-btn" id="back-btn">← Back</button>' : ''}`;
+    const subtextHtml = current.subtext ? `<p class="question-subtext">${current.subtext}</p>` : '';
+    app.innerHTML = `<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div><p class="question">${current.question}</p>${subtextHtml}<div class="answers" id="answers"></div>${history.length > 0 ? '<button class="back-btn" id="back-btn">← Back</button>' : ''}`;
     current.answers.forEach(a => {
       const btn = document.createElement('button');
       btn.className = 'answer-btn';
